@@ -1,0 +1,8 @@
+NOTAS BASE DE DATOS EXAMEN 3 EV:
+
+nombre database: marco-sara-dam
+user maestro: postgres
+password:12345678
+
+marco-sara-dam.cfqym2xvhdtf.us-east-1.rds.amazonaws.com
+

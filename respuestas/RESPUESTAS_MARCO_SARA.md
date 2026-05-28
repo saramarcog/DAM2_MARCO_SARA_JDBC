@@ -24,3 +24,6 @@ Explica qué ventaja aporta PreparedStatement frente a concatenar SQL manualment
 Tiene una ventaja de seguridad principalmente, porque al hacer la consulta
 le pasamos un ?, y ya en le pasamos el valor. Porque sino podrian inyectarle a 
 la consulta sql un 1=1, un true o algo, y ya tendrian acceso a la BD. 
+
+
+POR SI NO DEJA VER EL PDF DEL DIBUJO: https://excalidraw.com/#json=WOCs0TudYuJwzv_yNBn5t,xPMguuA5qIFeSfCAVan34A

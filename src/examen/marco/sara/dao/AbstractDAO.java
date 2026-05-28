@@ -1,6 +1,5 @@
 package examen.marco.sara.dao;
 import examen.marco.sara.motores.*;
-import java.util.ArrayList;
 
 public abstract class AbstractDAO<T>
         implements DAO<T> {
