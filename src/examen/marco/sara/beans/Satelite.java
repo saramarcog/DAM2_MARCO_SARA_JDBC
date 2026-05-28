@@ -21,6 +21,9 @@ public class Satelite {
         this.agencia = agencia;
         this.detalle = detalle;
     }
+    public Satelite() {
+        
+    }
 
     @Override
     public String toString() {

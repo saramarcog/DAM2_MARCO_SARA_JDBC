@@ -24,6 +24,8 @@ public abstract class MotorSQL {
         this.password = password;
         this.driver = driver;
     }
+
+
     public abstract void connect();
     public void prepare(String SQL){
 
@@ -93,5 +95,7 @@ public abstract class MotorSQL {
                     e.getMessage());
         }
     }
+    
+
 }
 
