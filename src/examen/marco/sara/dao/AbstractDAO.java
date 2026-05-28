@@ -1,5 +1,6 @@
 package examen.marco.sara.dao;
 import examen.marco.sara.motores.*;
+import java.util.ArrayList;
 
 public abstract class AbstractDAO<T>
         implements DAO<T> {
@@ -13,10 +14,7 @@ public abstract class AbstractDAO<T>
                         e.getMessage());
     }
     
-    /*
-     * CONSULTAS AVANZADAS
-     */
-    /* 
-    public abstract ArrayList<T> findByGenero(String genero);
-    public abstract ArrayList<T> findByDirector(String director);*/
+     
+    public abstract ArrayList<T> findByOrbita(String genero);
+    public abstract ArrayList<T> findByAgencia(String director);
 }

@@ -1,9 +1,14 @@
 package examen.marco.sara.beans;
 
+import java.util.ArrayList;
+
 public class Agencia {
     private int id;
     private String nombre;
     private String pais;
+
+    ArrayList<Satelite> satelites = new ArrayList<>();
+    //para guardar los diferentes satelites pertenecientes a la agencia
 
     public Agencia(int id, String nombre, String pais) {
         this.id = id;

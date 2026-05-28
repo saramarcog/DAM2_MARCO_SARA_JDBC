@@ -3,7 +3,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import examen.marco.sara.motores.*;
 import examen.marco.sara.beans.*;
-import examen.marco.sara.motores.MotorSQL;
 
 public class SateliteDAOImpl extends AbstractDAO<Satelite> {
     public SateliteDAOImpl(MotorSQL motorSQL) {
@@ -38,18 +37,30 @@ public class SateliteDAOImpl extends AbstractDAO<Satelite> {
   private static final String SQL_DELETE =
                     "DELETE FROM satelite " +
                             "WHERE id = ?";
-    public void check() {
-        try {
-             motorSQL.connect();
-            if (motorSQL.conn != null &&
-                    !motorSQL.conn.isClosed()) {
-                System.out.println("CONEXION OK");
-            }
-        } catch (Exception e) {
-            printError(e);
-        } finally {
-            motorSQL.close();
-        }
+
+ private static final String SQL_FIND_ALL =
+                            "SELECT * " +
+                                    "FROM satelite " +
+                                    "ORDER BY id";
+private static final String SQL_FIND =
+            "SELECT * " +
+                    "FROM satelite " +
+                    "WHERE id = ?";
+
+
+private static final String SQL_FIND_BY_ORBITA =
+                    "SELECT * " +
+                            "FROM satelite " +
+                            "WHERE orbita = ? " +
+                            "ORDER BY nombre";
+        
+private static final String SQL_FIND_BY_AGENCIA =
+                    "SELECT * " +
+                            "FROM satelite " +
+                            "WHERE id_agencia= ? " +
+                            "ORDER BY nombre DESC";
+
+                            
     
     @Override
     public void add(Satelite satelite) {
@@ -146,7 +157,7 @@ public class SateliteDAOImpl extends AbstractDAO<Satelite> {
             if(rs.next()){
 
                 satelite =
-                        mapPelicula(rs);
+                        mapSatelite(rs);
             }
 
         }catch (Exception e){
@@ -162,34 +173,164 @@ public class SateliteDAOImpl extends AbstractDAO<Satelite> {
     }
     @Override
     public ArrayList<Satelite> findAll() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+        ArrayList<Satelite> s =
+        new ArrayList<>();
+
+try{
+
+    motorSQL.connect();
+
+    motorSQL.prepare(SQL_FIND_ALL);
+
+    ResultSet rs =
+            motorSQL.executeQuery();
+
+    while(rs.next()){
+
+        s.add(
+                mapSatelite(rs));
+    }
+
+}catch (Exception e){
+
+    printError(e);
+
+}finally {
+
+    motorSQL.close();
+}
+
+return s;
     }
     
 
-    private Satelite mapPelicula(
+    private Satelite mapSatelite(
         ResultSet rs)
         throws Exception {
 
-    Satelite pelicula =
+    Satelite s=
             new Satelite();
 
-    pelicula.setId(
+    s.setId(
             rs.getInt("id"));
 
-    pelicula.setNombre(
+    s.setNombre(
             rs.getString("nombre"));
 
-    pelicula.setOrbita(
+    s.setOrbita(
             rs.getString("orbita"));
+    s.setPeso(rs.getInt("peso"));
 
+    s.setCoste(rs.getInt("coste"));
 
-    pelicula.setAnyo(
-            rs.getInt("anyo"));
-
-    pelicula.setDuracion(
-            rs.getInt("duracion"));
-
-    return pelicula;
+    s.setActivo(rs.getBoolean("activo"));
+    return s;
 }
+// CONSULTAS AVANZADAS 
+    @Override
+    public ArrayList<Satelite> findByOrbita(String orbita) {
+        ArrayList<Satelite> satelites =
+        new ArrayList<>();
+
+try{
+
+    motorSQL.connect();
+
+    motorSQL.prepare(
+            SQL_FIND_BY_ORBITA);
+
+    motorSQL.getPs().setString(
+            1,
+            orbita);
+
+    ResultSet rs =
+            motorSQL.executeQuery();
+
+    while(rs.next()){
+
+        satelites.add(
+                mapSatelite(rs));
+    }
+
+}catch (Exception e){
+
+    printError(e);
+
+}finally {
+
+    motorSQL.close();
 }
+
+return satelites;
+    }
+
+    @Override
+    public ArrayList<Satelite> findByAgencia(String agencia) {
+        ArrayList<Satelite> satelites =
+                new ArrayList<>();
+        try{
+            motorSQL.connect();
+            motorSQL.prepare(
+                    SQL_FIND_BY_AGENCIA);
+            motorSQL.getPs().setString(
+                    1,
+                    agencia);
+            ResultSet rs =
+                    motorSQL.executeQuery();
+            while(rs.next()){
+                satelites.add(
+                        mapSatelite(rs));
+            }
+        }catch (Exception e){
+            printError(e);
+        }finally {
+            motorSQL.close();
+        }
+
+        return satelites;
+    }
+    public static void main(String[] args){
+
+    SateliteDAOImpl sateliteDAO = new SateliteDAOImpl(MotorFactory.create(MotorFactory.POSTGRE));
+
+    System.out.println("prueba unitaria : ADD");
+
+    // Prueba Unitaria: ADD Película
+       Satelite s = new Satelite();
+       s.setNombre("Prueba");
+       s.setAgencia(new Agencia(1, "Aprobada:)","Imagi Nacion"));
+       s.setOrbita("Pluto");
+       s.setPeso(2222);
+
+       sateliteDAO.add(s);
+       System.out.println("Fin prueba unitaria");
+
+
+        // Prueba Unitaria: LISTAR SATELITES
+        ArrayList<Satelite> lstSatelite = sateliteDAO.findAll();
+        for (Satelite sat :lstSatelite
+             ) {
+            System.out.println(sat.toString());
+        }
+        // Fin Prueba Unitaria: LISTAR PELÍCULAS
+        System.out.println("Prueba Unitaria: ELIMINAR");
+        // Prueba Unitaria: ELIMINAR
+            sateliteDAO.delete(2);
+        // Prueba Unitaria: FIN ELIMINAR
+        System.out.println("Fin prueba unitaria");
+
+        System.out.println("Prueba Unitaria: FIND");
+        // Prueba Unitaria: FIND
+        sateliteDAO.find(2);
+        System.out.println("Fin prueba unitaria");
+
+        System.out.println("Prueba Unitaria: UPDATE");
+        // Prueba Unitaria: UPDATE
+        sateliteDAO.update(3, s );
+        System.out.println("Fin prueba unitaria");
+
+    
+    }
+}
+
+

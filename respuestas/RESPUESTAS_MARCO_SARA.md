@@ -2,7 +2,7 @@ PREGUNTA 1
 
 Explica cómo funciona la relación 1:N entre Agencia y Satelite tanto en SQL como en Java.
 
-
+Agencia guarda a los diferentes satelites (ArrayList), osea una agencia tiene muchos satelites. En cambio los satelites solo son de una agencia,entonces guardamos el id de la agencia
 
 PREGUNTA 2
 

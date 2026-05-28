@@ -10,7 +10,6 @@ public abstract class MotorSQL {
     protected String password;
     protected String driver;
     protected Connection conn;
-    
     //Para evitar inyecciones 
     protected PreparedStatement ps;
     public MotorSQL(
